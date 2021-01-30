@@ -8,7 +8,6 @@
 
 #include "World.h"
 
-#include "Camera.h"
 #include "Shader.h"
 #include "Entity.h"
 #include "Block.h"
@@ -40,7 +39,7 @@ World::~World()
 
 void World::SetCamera(glm::vec3* position, glm::vec3* up, float yaw, float pitch)
 {
-	this->Player->SetCamera(position, up, yaw, pitch);
+	this->Player->MoveCamera(position, up, yaw, pitch);
 }
 
 void World::Draw(Shader& shader)

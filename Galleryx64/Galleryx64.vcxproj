@@ -150,7 +150,6 @@
     <ClCompile Include="src\Block.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\BlockRenderer.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\ImageLoader.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
@@ -166,7 +165,6 @@
   <ItemGroup>
     <ClInclude Include="..\Dependencies\ASSIMP\include\assimp\config.h" />
     <ClInclude Include="src\Block.h" />
-    <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\ImageLoader.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />

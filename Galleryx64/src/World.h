@@ -2,7 +2,6 @@
 #define World_H
 
 #include "Shader.h"
-#include "Camera.h"
 #include "Entity.h"
 #include "Player.h"
 

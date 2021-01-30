@@ -4,7 +4,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-#include "Camera.h"
 #include "Shader.h"
 #include "World.h"
 #include "Model.h"
@@ -85,8 +84,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ourShader.use();
-        glm::mat4 projection = glm::perspective(glm::radians(world->Player->camera.Zoom), (float)Window::SCR_WIDTH / (float)Window::SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = world->Player->camera.GetViewMatrix();
+        glm::mat4 projection = glm::perspective(glm::radians(world->Player->Zoom), (float)Window::SCR_WIDTH / (float)Window::SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = world->Player->GetViewMatrix();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
