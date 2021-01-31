@@ -5,6 +5,7 @@
 
 #include "Window.h"
 #include "World.h"
+#include <iostream>
 
 double lastX = Window::SCR_WIDTH / 2.0f;
 double lastY = Window::SCR_HEIGHT / 2.0f;
@@ -23,8 +24,8 @@ Player* Player::GetInstance()
 
 Player::Player()
 {
-	this->MinPosition = glm::vec3(-0.3f, -0.3f, -0.3f);
-	this->MaxPosition = glm::vec3(0.3f, 0.3f, 0.3f);
+	this->MaxPosition = glm::vec3(0.2f, 0.1f, 0.2f);
+    this->MinPosition = glm::vec3(-0.2f, -0.6f, -0.2f);
 
 	glfwSetCursorPosCallback(Window::window, mouse_callback);
 	glfwSetScrollCallback(Window::window, scroll_callback);
@@ -38,6 +39,7 @@ Player::Player()
     MovementSpeed = SPEED;
     MouseSensitivity = SENSITIVITY;
     Zoom = ZOOM;
+    GravityVelocity = 0;
     updateCameraVectors();
 }
 
@@ -69,6 +71,10 @@ void Player::processInput()
     {
         ProcessKeyboard(RIGHT, World::DeltaTime);
     }
+    if (glfwGetKey(Window::window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+        ProcessKeyboard(JUMP, World::DeltaTime);
+    }
 }
 
 glm::mat4 Player::GetViewMatrix()
@@ -79,18 +85,108 @@ glm::mat4 Player::GetViewMatrix()
 void Player::ProcessKeyboard(Camera_Movement direction, double deltaTime)
 {
     float velocity = MovementSpeed * deltaTime;
+
+    int coordX = floor(Position.x);
+    int coordY = floor(Position.y);
+    int coordZ = floor(Position.z);
+
+    int minCoordX = floor(Position.x + MinPosition.x);
+    int minCoordZ = floor(Position.z + MinPosition.z);
+
+    int maxCoordX = floor(Position.x + MaxPosition.x);
+    int maxCoordZ = floor(Position.z + MaxPosition.z);
+
+    Entity* northEntity = nullptr; // X Max
+    Entity* southEntity = nullptr; // X Min
+    Entity* eastEntity = nullptr; // Z Max
+    Entity* westEntity = nullptr; // Z Min
+
+    std::vector<Entity*> entities = World::GetInstance()->Entities;
+
+    for (int i = 0; i < entities.size(); i++)
+    {
+        if (!northEntity && entities[i]->Position.x == maxCoordX && entities[i]->Position.y == coordY && entities[i]->Position.z == coordZ)
+        {
+            northEntity = entities[i];
+        }
+
+        if (!southEntity && entities[i]->Position.x == minCoordX && entities[i]->Position.y == coordY && entities[i]->Position.z == coordZ)
+        {
+            southEntity = entities[i];
+        }
+
+        if (!eastEntity && entities[i]->Position.x == coordX && entities[i]->Position.y == coordY && entities[i]->Position.z == maxCoordZ)
+        {
+            eastEntity = entities[i];
+        }
+
+        if (!westEntity && entities[i]->Position.x == coordX && entities[i]->Position.y == coordY && entities[i]->Position.z == minCoordZ)
+        {
+            westEntity = entities[i];
+        }
+    }
+
     if (direction == FORWARD)
-        Position += Front * velocity;
+    {
+        if (!northEntity && Front.x >= 0 || !southEntity && Front.x < 0)
+        {
+            Position.x += Front.x * velocity;
+        }
+        if (!eastEntity && Front.z >= 0 || !westEntity && Front.z < 0)
+        {
+            Position.z += Front.z * velocity;
+        }
+    }
     if (direction == BACKWARD)
-        Position -= Front * velocity;
+    {
+        if (!northEntity && Front.x < 0 || !southEntity && Front.x >= 0)
+        {
+            Position.x -= Front.x * velocity;
+        }
+        if (!eastEntity && Front.z < 0 || !westEntity && Front.z >= 0)
+        {
+            Position.z -= Front.z * velocity;
+        }
+    }
     if (direction == LEFT)
-        Position -= Right * velocity;
+    {
+        if (!northEntity && Right.x < 0 || !southEntity && Right.x >= 0)
+        {
+            Position.x -= Right.x * velocity;
+        }
+        if (!eastEntity && Right.z < 0 || !westEntity && Right.z >= 0)
+        {
+            Position.z -= Right.z * velocity;
+        }
+    }
     if (direction == RIGHT)
-        Position += Right * velocity;
+    {
+        if (!northEntity && Right.x >= 0 || !southEntity && Right.x < 0)
+        {
+            Position.x += Right.x * velocity;
+        }
+        if (!eastEntity && Right.z >= 0 || !westEntity && Right.z < 0)
+        {
+            Position.z += Right.z * velocity;
+        }
+    }
+    if (direction == JUMP && GravityVelocity == 0)
+    {
+        GravityVelocity = -2;
+        Position.y += 0.1;
+    }
+
+    //std::cout << "North: " << northEntity << " South: " << southEntity << " East: " << eastEntity << " West: " << westEntity << " | ";
+    std::cout << "Player Position: " << Position.x << ", " << Position.y << ", " << Position.z << std::endl;
 }
 
-void Player::ProcessMouseMovement(double xoffset, double yoffset,
-                                  GLboolean constrainPitch)
+void Player::ProcessGravity(double deltaTime)
+{
+    float velocity = GravityVelocity * deltaTime;
+    Position.y -= velocity;
+}
+
+void Player::ProcessMouseMovement(double xoffset, double yoffset, GLboolean constrainPitch)
 {
     xoffset *= MouseSensitivity;
     yoffset *= MouseSensitivity;
@@ -117,6 +213,8 @@ void Player::ProcessMouseScroll(double yoffset)
         Zoom = 1.0f;
     if (Zoom >= 45.0f)
         Zoom = 45.0f;
+
+    Position = glm::vec3(3.0f, 4.0f, 4.0f);
 }
 
 void Player::MoveCamera(glm::vec3* position, glm::vec3* up, float yaw, float pitch)

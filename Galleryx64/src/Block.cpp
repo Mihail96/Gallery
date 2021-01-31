@@ -14,8 +14,8 @@
 Block::Block(unsigned int textureId)
 {
     this->TextureId = textureId;
-    this->MinPosition = glm::vec3(-0.5f, -0.5f, -0.5f);
-    this->MaxPosition = glm::vec3(0.5f, 0.5f, 0.5f);
+    this->MinPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    this->MaxPosition = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
 void Block::Draw(Shader& shader)

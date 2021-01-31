@@ -15,9 +15,14 @@ public:
 
 	bool Intersects(Entity* entity)
 	{
-		return (this->MinPosition.x <= entity->MaxPosition.x && this->MaxPosition.x >= entity->MinPosition.x) &&
-			   (this->MinPosition.y <= entity->MaxPosition.y && this->MaxPosition.y >= entity->MinPosition.y) &&
-			   (this->MinPosition.z <= entity->MaxPosition.z && this->MaxPosition.z >= entity->MinPosition.z);
+		glm::vec3 calculatedThisMinPosition = this->MinPosition + this->Position;
+		glm::vec3 calculatedThisMaxPosition = this->MaxPosition + this->Position;
+		glm::vec3 calculatedEntityMinPosition = entity->MinPosition + entity->Position;
+		glm::vec3 calculatedEntityMaxPosition = entity->MaxPosition + entity->Position;
+
+		return (calculatedThisMinPosition.x <= calculatedEntityMaxPosition.x && calculatedThisMaxPosition.x  >= calculatedEntityMinPosition.x) &&
+			   (calculatedThisMinPosition.y <= calculatedEntityMaxPosition.y && calculatedThisMaxPosition.y  >= calculatedEntityMinPosition.y) &&
+			   (calculatedThisMinPosition.z <= calculatedEntityMaxPosition.z && calculatedThisMaxPosition.z  >= calculatedEntityMinPosition.z);
 	}
 };
 #endif

@@ -13,47 +13,47 @@ BlockRenderer::BlockRenderer()
 void BlockRenderer::CreateBlock()
 {
     float vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+     1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+     1.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+     1.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+     0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+     0.0f,  0.0f,  0.0f,  0.0f, 0.0f,
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+     1.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+     0.0f,  1.0f,  1.0f,  0.0f, 1.0f,
+     0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.0f,  1.0f,  1.0f,  1.0f, 0.0f,
+     0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+     0.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     0.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+     0.0f,  1.0f,  1.0f,  1.0f, 0.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
+     1.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+     1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     1.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+     1.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+     1.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+     0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+     0.0f,  0.0f,  0.0f,  0.0f, 1.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+     0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+     1.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 0.0f,
+     0.0f,  1.0f,  1.0f,  0.0f, 0.0f,
+     0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     };
 
     glGenVertexArrays(1, &VAO);
@@ -67,8 +67,8 @@ void BlockRenderer::CreateBlock()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);
 }

@@ -120,7 +120,6 @@
     <None Include="res\models\backpack\backpack.mtl" />
     <None Include="res\shaders\fragment.shader" />
     <None Include="res\shaders\vertex.shader" />
-    <None Include="res\shaders\backup.shader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\models\backpack\source_attribution.txt" />

@@ -5,7 +5,7 @@
 
 enum Camera_Movement
 {
-	FORWARD, BACKWARD, LEFT, RIGHT
+	FORWARD, BACKWARD, LEFT, RIGHT, JUMP
 };
 
 const float YAW = -90.0f;
@@ -29,6 +29,7 @@ public:
 	float MovementSpeed;
 	float MouseSensitivity;
 	float Zoom;
+	float GravityVelocity;
 
 	static Player* GetInstance();
 
@@ -45,6 +46,8 @@ public:
 	void ProcessMouseScroll(double yoffset);
 
 	void MoveCamera(glm::vec3* position, glm::vec3* up, float yaw = YAW, float pitch = PITCH);
+
+	void ProcessGravity(double deltaTime);
 
 private:
 	static Player* instance;
