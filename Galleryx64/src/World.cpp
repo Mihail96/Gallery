@@ -81,26 +81,19 @@ void World::ProcessTime()
 		return;
 	}
 
-	Entity* topEntity = nullptr; // Y Max
-	Entity* bottomEntity = nullptr; // Y Min
-	for (int i = 0; i < Entities.size(); i++)
-	{
-		if (!topEntity && Entities[i]->Position.x == coordX && Entities[i]->Position.y == maxCoordY && Entities[i]->Position.z == coordZ)
-		{
-			topEntity = Entities[i];
-		}
-
-		if (!bottomEntity && Entities[i]->Position.x == coordX && Entities[i]->Position.y == minCoordY && Entities[i]->Position.z == coordZ)
-		{
-			bottomEntity = Entities[i];
-		}
-	}
+	Entity* topEntity = Coordinates[coordX + WorldSize * (maxCoordY + WorldSize * coordZ)]; // Y Max
+	Entity* bottomEntity = Coordinates[coordX + WorldSize * (minCoordY + WorldSize * coordZ)]; // Y Min
 
 	if (bottomEntity && bottomEntity->Intersects(Player) || topEntity && topEntity->Intersects(Player))
 	{
 		if (bottomEntity && bottomEntity->Position.y + bottomEntity->MaxPosition.y >= Player->Position.y + Player->MinPosition.y)
 		{
-			Player->Position.y = bottomEntity->Position.y + bottomEntity->MaxPosition.y + std::fabs(Player->MinPosition.y);
+			Player->Position.y = bottomEntity->Position.y + bottomEntity->MaxPosition.y + std::fabs(Player->MinPosition.y) - 0.01f;
+		}
+
+		if (topEntity && topEntity->Position.y + topEntity->MinPosition.y <= Player->Position.y + Player->MaxPosition.y)
+		{
+			Player->Position.y = topEntity->Position.y + topEntity->MinPosition.y - std::fabs(Player->MaxPosition.y);
 		}
 
 		if (topEntity)
@@ -118,6 +111,7 @@ void World::ProcessTime()
 	{
 		Player->GravityVelocity += GravityAcceleration;
 		Player->ProcessGravity(DeltaTime);
+		std::cout << "No Bottom Entity at : " << coordX << ", " << minCoordY << ", " << coordZ << " | ";
 	}
 }
 
@@ -125,6 +119,17 @@ void World::InitEntities(unsigned int worldSize)
 {
 	this->WorldSize = worldSize;
 	Coordinates = new Entity * [worldSize * worldSize * worldSize];
+
+	for (int x = 0; x < WorldSize; x++)
+	{
+		for (int y = 0; y < WorldSize; y++)
+		{
+			for (int z = 0; z < WorldSize; z++)
+			{
+				this->Coordinates[x + WorldSize * (y + WorldSize * z)] = nullptr;
+			}
+		}
+	}
 }
 
 unsigned int World::LoadTexture(const char* fileName)
@@ -166,15 +171,5 @@ void World::DestoryWorld()
 	{
 		delete this->Entities[i];
 	}
-	////for (int x = 0; x < 50; x++)
-	////{
-	////	for (int y = 0; y < 50; y++)
-	////	{
-	////		for (int z = 0; z < 50; z++)
-	////		{
-	////			delete this->Coordinates[x + worldSize * (y + worldSize * z)];
-	////		}
-	////	}
-	////}
 	delete[] this->Coordinates;
 }

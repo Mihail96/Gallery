@@ -8,10 +8,14 @@
 class World
 {
 public:
-	Player* Player;
-	std::vector<Entity*> Entities;
+	static unsigned int WorldSize;
+	static float GravityAcceleration;
 	static double DeltaTime;
 	static double LastFrame;
+
+	Player* Player;
+	std::vector<Entity*> Entities;
+	Entity** Coordinates;
 
 	static World* GetInstance();
 
@@ -31,10 +35,6 @@ public:
 
 private:
 	static World* Instance;
-	static unsigned int WorldSize;
-	static float GravityAcceleration;
-
-	Entity** Coordinates;
 
 	World();
 

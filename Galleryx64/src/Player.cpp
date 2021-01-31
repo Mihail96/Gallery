@@ -96,35 +96,13 @@ void Player::ProcessKeyboard(Camera_Movement direction, double deltaTime)
     int maxCoordX = floor(Position.x + MaxPosition.x);
     int maxCoordZ = floor(Position.z + MaxPosition.z);
 
-    Entity* northEntity = nullptr; // X Max
-    Entity* southEntity = nullptr; // X Min
-    Entity* eastEntity = nullptr; // Z Max
-    Entity* westEntity = nullptr; // Z Min
+    Entity** coordinates = World::GetInstance()->Coordinates;
+    unsigned int worldSize = World::WorldSize;
 
-    std::vector<Entity*> entities = World::GetInstance()->Entities;
-
-    for (int i = 0; i < entities.size(); i++)
-    {
-        if (!northEntity && entities[i]->Position.x == maxCoordX && entities[i]->Position.y == coordY && entities[i]->Position.z == coordZ)
-        {
-            northEntity = entities[i];
-        }
-
-        if (!southEntity && entities[i]->Position.x == minCoordX && entities[i]->Position.y == coordY && entities[i]->Position.z == coordZ)
-        {
-            southEntity = entities[i];
-        }
-
-        if (!eastEntity && entities[i]->Position.x == coordX && entities[i]->Position.y == coordY && entities[i]->Position.z == maxCoordZ)
-        {
-            eastEntity = entities[i];
-        }
-
-        if (!westEntity && entities[i]->Position.x == coordX && entities[i]->Position.y == coordY && entities[i]->Position.z == minCoordZ)
-        {
-            westEntity = entities[i];
-        }
-    }
+    Entity* northEntity = coordinates[maxCoordX + worldSize * (coordY + worldSize * coordZ)]; // X Max
+    Entity* southEntity = coordinates[minCoordX + worldSize * (coordY + worldSize * coordZ)]; // X Min
+    Entity* eastEntity = coordinates[coordX + worldSize * (coordY + worldSize * maxCoordZ)]; // Z Max
+    Entity* westEntity = coordinates[coordX + worldSize * (coordY + worldSize * minCoordZ)]; // Z Min
 
     if (direction == FORWARD)
     {
@@ -176,7 +154,6 @@ void Player::ProcessKeyboard(Camera_Movement direction, double deltaTime)
         Position.y += 0.1;
     }
 
-    //std::cout << "North: " << northEntity << " South: " << southEntity << " East: " << eastEntity << " West: " << westEntity << " | ";
     std::cout << "Player Position: " << Position.x << ", " << Position.y << ", " << Position.z << std::endl;
 }
 
@@ -184,6 +161,8 @@ void Player::ProcessGravity(double deltaTime)
 {
     float velocity = GravityVelocity * deltaTime;
     Position.y -= velocity;
+
+    std::cout << "Player Position: " << Position.x << ", " << Position.y << ", " << Position.z << std::endl;
 }
 
 void Player::ProcessMouseMovement(double xoffset, double yoffset, GLboolean constrainPitch)

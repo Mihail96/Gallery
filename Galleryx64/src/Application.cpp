@@ -48,8 +48,8 @@ int main()
     const char* name = "res/textures/container.jpg";
     loadedTextures.push_back(world->LoadTexture(name));
 
-    //std::string modelPath = std::string("res/models/backpack/backpack.obj");
-    //Entity* backpackModel = new Model(modelPath);
+    std::string modelPath = std::string("res/models/backpack/backpack.obj");
+    Entity* backpackModel = new Model(modelPath);
     Entity* block1 = new Block(loadedTextures[0]);
     Entity* block2 = new Block(loadedTextures[0]);
     Entity* block3 = new Block(loadedTextures[0]);
@@ -75,7 +75,7 @@ int main()
 
     Entity* blockr1 = new Block(loadedTextures[0]);
 
-    //world->InsertEntity(backpackModel, 3.0f, 3.0f, 3.0f);
+    world->InsertEntity(backpackModel, 3.0f, 3.0f, 3.0f);
 
     world->InsertEntity(block1, 2.0f, 2.0f, 4.0f);
     world->InsertEntity(block2, 3.0f, 2.0f, 4.0f);

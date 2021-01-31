@@ -30,6 +30,10 @@ void Model::Draw(Shader& shader)
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, Position);
     model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+
+    this->MinPosition *= 0.25f;
+    this->MaxPosition *= 0.25f;
+
     shader.setMat4("model", model);
 
     for (unsigned int i = 0; i < meshes.size(); i++)
