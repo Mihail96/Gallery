@@ -147,31 +147,38 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Dependencies\GLAD\src\glad.c" />
-    <ClCompile Include="src\Block.cpp" />
+    <ClCompile Include="src\Entities\Block.cpp" />
     <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\BlockRenderer.cpp" />
-    <ClCompile Include="src\ImageLoader.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
-    <ClCompile Include="src\Model.cpp" />
-    <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClInclude Include="src\BlockRenderer.h" />
-    <ClInclude Include="src\Entity.h" />
-    <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\Vertex.h" />
-    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Lights\DirectionalLight.cpp" />
+    <ClCompile Include="src\Lights\PointLight.cpp" />
+    <ClCompile Include="src\Lights\SpotLight.cpp" />
+    <ClCompile Include="src\Renderers\BlockRenderer.cpp" />
+    <ClCompile Include="src\Utils\ImageLoader.cpp" />
+    <ClCompile Include="src\Entities\Mesh.cpp" />
+    <ClCompile Include="src\Entities\Model.cpp" />
+    <ClCompile Include="src\Entities\Player.cpp" />
+    <ClCompile Include="src\Renderers\Shader.cpp" />
+    <ClInclude Include="src\Renderers\BlockRenderer.h" />
+    <ClInclude Include="src\Lights\DirectionalLight.h" />
+    <ClInclude Include="src\Entities\Entity.h" />
+    <ClInclude Include="src\Lights\PointLight.h" />
+    <ClInclude Include="src\Lights\SpotLight.h" />
+    <ClInclude Include="src\Entities\Player.h" />
+    <ClInclude Include="src\Lights\Light.h" />
+    <ClInclude Include="src\Models\Vertex.h" />
+    <ClCompile Include="src\Utils\Window.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Dependencies\ASSIMP\include\assimp\config.h" />
-    <ClInclude Include="src\Block.h" />
-    <ClInclude Include="src\ImageLoader.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\Model.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClCompile Include="src\StbImageWrapper.cpp" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Entities\Block.h" />
+    <ClInclude Include="src\Utils\ImageLoader.h" />
+    <ClInclude Include="src\Entities\Mesh.h" />
+    <ClInclude Include="src\Entities\Model.h" />
+    <ClInclude Include="src\Renderers\Shader.h" />
+    <ClCompile Include="src\Utils\StbImageWrapper.cpp" />
+    <ClInclude Include="src\Models\Texture.h" />
+    <ClInclude Include="src\Utils\Window.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -180,13 +187,19 @@
     <Image Include="res\models\backpack\normal.png" />
     <Image Include="res\models\backpack\roughness.jpg" />
     <Image Include="res\models\backpack\specular.jpg" />
-    <Image Include="res\textures\awesomeface.png" />
     <Image Include="res\textures\container.jpg" />
+    <Image Include="res\textures\floor.jpg" />
+    <Image Include="res\textures\forrestground.jpg" />
+    <Image Include="res\textures\marble.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\models\backpack\backpack.mtl" />
-    <None Include="res\shaders\fragment.shader" />
-    <None Include="res\shaders\vertex.shader" />
+    <None Include="res\shaders\BlockFragment.shader" />
+    <None Include="res\shaders\BlockVertex.shader" />
+    <None Include="res\shaders\LightFragment.shader" />
+    <None Include="res\shaders\LightVertex.shader" />
+    <None Include="res\shaders\ModelFragment.shader" />
+    <None Include="res\shaders\ModelVertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\models\backpack\source_attribution.txt" />

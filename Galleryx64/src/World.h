@@ -1,9 +1,9 @@
 #ifndef World_H
 #define World_H
 
-#include "Shader.h"
-#include "Entity.h"
-#include "Player.h"
+#include "Entities/Entity.h"
+#include "Entities/Player.h"
+#include "Lights/DirectionalLight.h"
 
 class World
 {
@@ -16,12 +16,13 @@ public:
 	Player* Player;
 	std::vector<Entity*> Entities;
 	Entity** Coordinates;
+	DirectionalLight* directionalLight;
 
 	static World* GetInstance();
 
 	void SetCamera(glm::vec3* position, glm::vec3* up, float yaw, float pitch);
 
-	void Draw(Shader& shader);
+	void Draw();
 
 	void InsertEntity(Entity* entity, float x, float y, float z);
 

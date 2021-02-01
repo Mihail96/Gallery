@@ -3,7 +3,8 @@
 
 #include <vector>
 
-#include "Shader.h"
+#include "../Renderers/Shader.h"
+#include "../Lights/PointLight.h"
 
 class Entity
 {
@@ -11,7 +12,14 @@ public:
 	glm::vec3 Position;
 	glm::vec3 MaxPosition;
 	glm::vec3 MinPosition;
-	virtual void Draw(Shader& shader) = 0;
+	
+	Shader* shader;
+	PointLight* pointLight;
+
+	std::vector<Entity*>  illuminatedByEntities;
+	bool LightsCalculated = false;
+
+	virtual void Draw() = 0;
 
 	bool Intersects(Entity* entity)
 	{

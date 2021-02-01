@@ -4,11 +4,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-#include "Shader.h"
+#include "Renderers/Shader.h"
 #include "World.h"
-#include "Model.h"
-#include "Block.h"
-#include "Window.h"
+#include "Entities/Model.h"
+#include "Entities/Block.h"
+#include "Utils/Window.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -36,9 +36,11 @@ int main()
 
     std::vector<unsigned int> loadedTextures;
 
-    Shader ourShader("res/shaders/vertex.shader", "res/shaders/fragment.shader");
+    Shader modelShader("res/shaders/ModelVertex.shader", "res/shaders/ModelFragment.shader");
+    Shader blockShader("res/shaders/BlockVertex.shader", "res/shaders/BlockFragment.shader");
+    Shader lightShader("res/shaders/LightVertex.shader", "res/shaders/LightFragment.shader");
 
-    glm::vec3 cameraPosition = glm::vec3(3.0f, 4.0f, 4.0f);
+    glm::vec3 cameraPosition = glm::vec3(30.0f, 3.0f, 30.0f);
     glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
     World* world = World::GetInstance();
@@ -47,66 +49,47 @@ int main()
 
     const char* name = "res/textures/container.jpg";
     loadedTextures.push_back(world->LoadTexture(name));
+    name = "res/textures/marble.jpg";
+    loadedTextures.push_back(world->LoadTexture(name));
+    name = "res/textures/floor.jpg";
+    loadedTextures.push_back(world->LoadTexture(name));
+    name = "res/textures/forrestground.jpg";
+    loadedTextures.push_back(world->LoadTexture(name));
 
-    std::string modelPath = std::string("res/models/backpack/backpack.obj");
-    Entity* backpackModel = new Model(modelPath);
-    Entity* block1 = new Block(loadedTextures[0]);
-    Entity* block2 = new Block(loadedTextures[0]);
-    Entity* block3 = new Block(loadedTextures[0]);
-    Entity* block4 = new Block(loadedTextures[0]);
-    Entity* block5 = new Block(loadedTextures[0]);
-    Entity* block6 = new Block(loadedTextures[0]);
-    Entity* block7 = new Block(loadedTextures[0]);
-    Entity* block8 = new Block(loadedTextures[0]);
-    Entity* block9 = new Block(loadedTextures[0]);
+    //std::string modelPath = std::string("res/models/backpack/backpack.obj");
+    ////Entity* backpackModel = new Model(modelPath, &modelShader);
 
-    Entity* blockw1 = new Block(loadedTextures[0]);
-    Entity* blockw2 = new Block(loadedTextures[0]);
-    Entity* blockw3 = new Block(loadedTextures[0]);
-    Entity* blockw4 = new Block(loadedTextures[0]);
-    Entity* blockw5 = new Block(loadedTextures[0]);
-    Entity* blockw6 = new Block(loadedTextures[0]);
-    Entity* blockw7 = new Block(loadedTextures[0]);
-    Entity* blockw8 = new Block(loadedTextures[0]);
-    Entity* blockw9 = new Block(loadedTextures[0]);
-    Entity* blockw10 = new Block(loadedTextures[0]);
-    Entity* blockw11 = new Block(loadedTextures[0]);
-    Entity* blockw12 = new Block(loadedTextures[0]);
+    Entity* light1 = new Block(loadedTextures[1], &lightShader);
+    light1->pointLight = new PointLight();
+    world->InsertEntity(light1, 30.5f, 3.5f, 30.5f);
 
-    Entity* blockr1 = new Block(loadedTextures[0]);
+    Entity* light2 = new Block(loadedTextures[1], &lightShader);
+    light2->pointLight = new PointLight();
+    world->InsertEntity(light2, 20.5f, 2.5f, 20.5f);
 
-    world->InsertEntity(backpackModel, 3.0f, 3.0f, 3.0f);
+    Entity* light3 = new Block(loadedTextures[1], &lightShader);
+    light3->pointLight = new PointLight();
+    world->InsertEntity(light3, 20.5f, 2.5f, 40.5f);
 
-    world->InsertEntity(block1, 2.0f, 2.0f, 4.0f);
-    world->InsertEntity(block2, 3.0f, 2.0f, 4.0f);
-    world->InsertEntity(block3, 4.0f, 2.0f, 4.0f);
+    Entity* light4 = new Block(loadedTextures[1], &lightShader);
+    light4->pointLight = new PointLight();
+    world->InsertEntity(light4, 40.5f, 2.5f, 20.5f);
 
-    world->InsertEntity(block4, 2.0f, 2.0f, 3.0f);
-    world->InsertEntity(block5, 3.0f, 2.0f, 3.0f);
-    world->InsertEntity(block6, 4.0f, 2.0f, 3.0f);
+    Entity* light5 = new Block(loadedTextures[1], &lightShader);
+    light5->pointLight = new PointLight();
+    world->InsertEntity(light5, 40.5f, 2.5f, 40.5f);
 
-    world->InsertEntity(block7, 2.0f, 2.0f, 2.0f);
-    world->InsertEntity(block8, 3.0f, 2.0f, 2.0f);
-    world->InsertEntity(block9, 4.0f, 2.0f, 2.0f);
+    
 
-
-    world->InsertEntity(blockw1,  2.0f, 3.0f, 5.0f);
-    world->InsertEntity(blockw2,  3.0f, 3.0f, 5.0f);
-    world->InsertEntity(blockw3,  4.0f, 3.0f, 5.0f);
-                                        
-    world->InsertEntity(blockw4,  5.0f, 3.0f, 4.0f);
-    world->InsertEntity(blockw5,  5.0f, 3.0f, 3.0f);
-    world->InsertEntity(blockw6,  5.0f, 3.0f, 2.0f);
-                                        
-    world->InsertEntity(blockw7,  2.0f, 3.0f, 1.0f);
-    world->InsertEntity(blockw8,  3.0f, 3.0f, 1.0f);
-    world->InsertEntity(blockw9,  4.0f, 3.0f, 1.0f);
-                                        
-    world->InsertEntity(blockw10, 1.0f, 3.0f, 2.0f);
-    world->InsertEntity(blockw11, 1.0f, 3.0f, 3.0f);
-    world->InsertEntity(blockw12, 1.0f, 3.0f, 4.0f);
-
-    world->InsertEntity(blockr1, 2.0f, 4.0f, 4.0f);
+    for (int x = 20; x < 40; x++)
+    {
+        for (int y = 20; y < 40; y++)
+        {
+            int z = 1;
+            Entity* block = new Block(loadedTextures[3], &blockShader);
+            world->InsertEntity(block, x, z, y);
+        }
+    }
 
     while (!glfwWindowShouldClose(Window::window))
     {
@@ -117,13 +100,7 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ourShader.use();
-        glm::mat4 projection = glm::perspective(glm::radians(world->Player->Zoom), (float)Window::SCR_WIDTH / (float)Window::SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = world->Player->GetViewMatrix();
-        ourShader.setMat4("projection", projection);
-        ourShader.setMat4("view", view);
-
-        world->Draw(ourShader);
+        world->Draw();
 
         glfwSwapBuffers(Window::window);
         glfwPollEvents();

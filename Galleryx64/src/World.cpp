@@ -8,9 +8,8 @@
 
 #include "World.h"
 
-#include "Shader.h"
-#include "Entity.h"
-#include "Block.h"
+#include "Entities/Entity.h"
+#include "Entities/Block.h"
 
 double World::DeltaTime = 0.0f;
 double World::LastFrame = 0.0f;
@@ -30,6 +29,7 @@ World* World::GetInstance()
 World::World()
 {
 	this->Coordinates = nullptr;
+	this->directionalLight = new DirectionalLight();
 	this->Player = Player::GetInstance();
 }
 
@@ -43,11 +43,11 @@ void World::SetCamera(glm::vec3* position, glm::vec3* up, float yaw, float pitch
 	this->Player->MoveCamera(position, up, yaw, pitch);
 }
 
-void World::Draw(Shader& shader)
+void World::Draw()
 {
 	for (unsigned int i = 0; i < Entities.size(); i++)
 	{
-		Entities[i]->Draw(shader);
+		Entities[i]->Draw();
 	}
 }
 
@@ -76,7 +76,7 @@ void World::ProcessTime()
 
 	int maxCoordY = floor(Player->Position.y + Player->MaxPosition.y);
 
-	if (coordX < 0 || coordY < 0 || coordZ < 0)
+	if (coordX <= 0 || minCoordY <= 0 || coordZ <= 0)
 	{
 		return;
 	}
@@ -111,7 +111,7 @@ void World::ProcessTime()
 	{
 		Player->GravityVelocity += GravityAcceleration;
 		Player->ProcessGravity(DeltaTime);
-		std::cout << "No Bottom Entity at : " << coordX << ", " << minCoordY << ", " << coordZ << " | ";
+		//std::cout << "No Bottom Entity at : " << coordX << ", " << minCoordY << ", " << coordZ << " | ";
 	}
 }
 

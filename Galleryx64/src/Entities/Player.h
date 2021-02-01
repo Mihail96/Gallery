@@ -1,7 +1,10 @@
 #ifndef Player_H
 #define Player_H
 
+#include <GLFW/glfw3.h>
+
 #include "Entity.h"
+#include "../Lights/SpotLight.h"
 
 enum Camera_Movement
 {
@@ -30,10 +33,13 @@ public:
 	float MouseSensitivity;
 	float Zoom;
 	float GravityVelocity;
+	bool toggleSpotlight = false;
+
+	SpotLight* spotLight;
 
 	static Player* GetInstance();
 
-	void Draw(Shader& shader);
+	void Draw();
 
 	void processInput();
 

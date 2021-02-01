@@ -7,6 +7,7 @@
 
 #include "Mesh.h"
 #include "Entity.h"
+#include "../Renderers/Shader.h"
 
 class Model : public Entity
 {
@@ -15,9 +16,9 @@ public:
     std::vector<Mesh> meshes;
     std::string directory;
 
-    Model(std::string const& path);
+    Model(std::string const& path, Shader* shader);
 
-    void Draw(Shader& shader);
+    void Draw();
 
 private:
     void loadModel(std::string const& path);

@@ -3,10 +3,6 @@
 
 #include "Mesh.h"
 
-#include "Shader.h"
-#include "Vertex.h"
-#include "Texture.h"
-
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
     this->vertices = vertices;

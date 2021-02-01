@@ -10,23 +10,32 @@
 
 #include "Model.h"
 
-#include "ImageLoader.h"
-#include "Entity.h"
-#include "Mesh.h"
-#include "Shader.h"
-#include "Vertex.h"
-#include "Texture.h"
+#include "../Utils/ImageLoader.h"
+#include "../Models/Vertex.h"
+#include "../Models/Texture.h"
+#include "Player.h"
+#include "../Utils/Window.h"
 
-Model::Model(std::string const& path)
+Model::Model(std::string const& path, Shader* shader)
 {
     this->MinPosition = glm::vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     this->MaxPosition = glm::vec3(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
 
+    this->shader = shader;
+
     loadModel(path);
 }
 
-void Model::Draw(Shader& shader)
+void Model::Draw()
 {
+    Player* player = Player::GetInstance();
+
+    shader->use();
+    glm::mat4 projection = glm::perspective(player->Zoom, (float)Window::SCR_WIDTH / (float)Window::SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 view = player->GetViewMatrix();
+    shader->setMat4("projection", projection);
+    shader->setMat4("view", view);
+
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, Position);
     model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
@@ -34,10 +43,10 @@ void Model::Draw(Shader& shader)
     this->MinPosition *= 0.25f;
     this->MaxPosition *= 0.25f;
 
-    shader.setMat4("model", model);
+    shader->setMat4("model", model);
 
     for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(shader);
+        meshes[i].Draw(*shader);
 }
 
 void Model::loadModel(std::string const& path)

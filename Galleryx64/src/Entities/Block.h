@@ -6,9 +6,9 @@
 class Block : public Entity
 {
 public:
-    Block(unsigned int textureId);
+    Block(unsigned int textureId, Shader* shader);
 
-    void Draw(Shader& shader);
+    void Draw();
 
 private:
     unsigned int TextureId;

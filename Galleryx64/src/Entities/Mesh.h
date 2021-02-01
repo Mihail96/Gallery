@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "Vertex.h"
-#include "Texture.h"
-#include "Shader.h"
+#include "../Renderers/Shader.h"
+#include "../Models/Vertex.h"
+#include "../Models/Texture.h"
 
 class Mesh
 {

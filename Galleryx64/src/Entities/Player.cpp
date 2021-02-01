@@ -1,11 +1,11 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtx/transform.hpp>
+#include <iostream>
 
 #include "Player.h"
 
-#include "Window.h"
-#include "World.h"
-#include <iostream>
+#include "../Utils/Window.h"
+#include "../World.h"
 
 double lastX = Window::SCR_WIDTH / 2.0f;
 double lastY = Window::SCR_HEIGHT / 2.0f;
@@ -31,7 +31,7 @@ Player::Player()
 	glfwSetScrollCallback(Window::window, scroll_callback);
 	glfwSetInputMode(Window::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    Position = glm::vec3(0.0f, 0.0f, 0.0f);
+    Position = glm::vec3(4.0f, 4.0f, 4.0f);
     WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     Right = glm::vec3(0.0f, 0.0f, 1.0f);
     Yaw = YAW;
@@ -41,9 +41,11 @@ Player::Player()
     Zoom = ZOOM;
     GravityVelocity = 0;
     updateCameraVectors();
+
+    spotLight = new SpotLight();
 }
 
-void Player::Draw(Shader& shader)
+void Player::Draw()
 {
 
 }
@@ -71,6 +73,10 @@ void Player::processInput()
     {
         ProcessKeyboard(RIGHT, World::DeltaTime);
     }
+    if (glfwGetKey(Window::window, GLFW_KEY_F) == GLFW_PRESS)
+    {
+        toggleSpotlight = !toggleSpotlight;
+    }
     if (glfwGetKey(Window::window, GLFW_KEY_SPACE) == GLFW_PRESS)
     {
         ProcessKeyboard(JUMP, World::DeltaTime);
@@ -95,6 +101,13 @@ void Player::ProcessKeyboard(Camera_Movement direction, double deltaTime)
 
     int maxCoordX = floor(Position.x + MaxPosition.x);
     int maxCoordZ = floor(Position.z + MaxPosition.z);
+
+    if (minCoordX <= 0 || coordY <= 0 || minCoordZ <= 0)
+    {
+        Position.x += 0.1;
+        Position.z += 0.1;
+        return;
+    }
 
     Entity** coordinates = World::GetInstance()->Coordinates;
     unsigned int worldSize = World::WorldSize;
@@ -150,7 +163,7 @@ void Player::ProcessKeyboard(Camera_Movement direction, double deltaTime)
     }
     if (direction == JUMP && GravityVelocity == 0)
     {
-        GravityVelocity = -2;
+        GravityVelocity = -4;
         Position.y += 0.1;
     }
 
