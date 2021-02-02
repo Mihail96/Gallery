@@ -5,6 +5,7 @@
 
 #include "../Renderers/Shader.h"
 #include "../Lights/PointLight.h"
+#include "../Lights/SpotLight.h"
 
 class Entity
 {
@@ -12,14 +13,26 @@ public:
 	glm::vec3 Position;
 	glm::vec3 MaxPosition;
 	glm::vec3 MinPosition;
+	glm::vec3 direction;
 	
 	Shader* shader;
 	PointLight* pointLight;
+	SpotLight* spotLight;
 
 	std::vector<Entity*>  illuminatedByEntities;
 	bool LightsCalculated = false;
+	bool Collison = true;
+	bool actionBlock1 = false;
+	bool lightaction1 = false;
+
+	double DeltaTime = 0;
+	double LastFrame = 0;
+	double MaxActTime = 10;
+	double CurrentFrame = 0;
 
 	virtual void Draw() = 0;
+
+	virtual void Act(double currentFrame) = 0;
 
 	bool Intersects(Entity* entity)
 	{

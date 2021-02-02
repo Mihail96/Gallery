@@ -68,6 +68,11 @@ void World::ProcessTime()
 	DeltaTime = currentFrame - LastFrame;
 	LastFrame = currentFrame;
 
+	for (int i = 0; i < ActiveEntities.size(); i++)
+	{
+		ActiveEntities[i]->Act(currentFrame);
+	}
+
 	int coordX = floor(Player->Position.x);
 	int coordY = floor(Player->Position.y);
 	int coordZ = floor(Player->Position.z);
@@ -84,25 +89,25 @@ void World::ProcessTime()
 	Entity* topEntity = Coordinates[coordX + WorldSize * (maxCoordY + WorldSize * coordZ)]; // Y Max
 	Entity* bottomEntity = Coordinates[coordX + WorldSize * (minCoordY + WorldSize * coordZ)]; // Y Min
 
-	if (bottomEntity && bottomEntity->Intersects(Player) || topEntity && topEntity->Intersects(Player))
+	if (bottomEntity && bottomEntity->Collison && bottomEntity->Intersects(Player) || topEntity && topEntity->Collison && topEntity->Intersects(Player))
 	{
-		if (bottomEntity && bottomEntity->Position.y + bottomEntity->MaxPosition.y >= Player->Position.y + Player->MinPosition.y)
+		if (bottomEntity && bottomEntity->Collison && bottomEntity->Position.y + bottomEntity->MaxPosition.y >= Player->Position.y + Player->MinPosition.y)
 		{
 			Player->Position.y = bottomEntity->Position.y + bottomEntity->MaxPosition.y + std::fabs(Player->MinPosition.y) - 0.01f;
 		}
 
-		if (topEntity && topEntity->Position.y + topEntity->MinPosition.y <= Player->Position.y + Player->MaxPosition.y)
+		if (topEntity && topEntity->Collison && topEntity->Position.y + topEntity->MinPosition.y <= Player->Position.y + Player->MaxPosition.y)
 		{
 			Player->Position.y = topEntity->Position.y + topEntity->MinPosition.y - std::fabs(Player->MaxPosition.y);
 		}
 
-		if (topEntity)
+		if (topEntity && topEntity->Collison)
 		{
 			Player->GravityVelocity = GravityAcceleration;
 			Player->ProcessGravity(DeltaTime);
 		}
 
-		if (bottomEntity)
+		if (bottomEntity && bottomEntity->Collison)
 		{
 			Player->GravityVelocity = 0;
 		}
@@ -111,7 +116,6 @@ void World::ProcessTime()
 	{
 		Player->GravityVelocity += GravityAcceleration;
 		Player->ProcessGravity(DeltaTime);
-		//std::cout << "No Bottom Entity at : " << coordX << ", " << minCoordY << ", " << coordZ << " | ";
 	}
 }
 

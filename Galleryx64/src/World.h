@@ -4,6 +4,7 @@
 #include "Entities/Entity.h"
 #include "Entities/Player.h"
 #include "Lights/DirectionalLight.h"
+#include "Entities/SpotLightBlock.h"
 
 class World
 {
@@ -14,8 +15,10 @@ public:
 	static double LastFrame;
 
 	Player* Player;
+	Entity* spotLightBlock;
 	std::vector<Entity*> Entities;
 	Entity** Coordinates;
+	std::vector<Entity*> ActiveEntities;
 	DirectionalLight* directionalLight;
 
 	static World* GetInstance();

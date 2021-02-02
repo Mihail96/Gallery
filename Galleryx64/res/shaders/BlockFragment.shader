@@ -56,7 +56,7 @@ uniform vec3 viewPos;
 uniform DirLight dirLight;
 uniform int numberOfLights;
 uniform PointLight pointLights[MAX_LIGHTS];
-uniform SpotLight spotLight;
+uniform SpotLight spotLight[2];
 uniform Material material;
 uniform int toggleSpotlight;
 
@@ -78,7 +78,8 @@ void main()
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
     // phase 3: spot light
     if (toggleSpotlight == 1)
-        result += CalcSpotLight(spotLight, norm, FragPos, viewDir);
+        result += CalcSpotLight(spotLight[0], norm, FragPos, viewDir);
+    result += CalcSpotLight(spotLight[1], norm, FragPos, viewDir);
 
     FragColor = vec4(result, 1.0);
 }

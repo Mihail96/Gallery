@@ -18,6 +18,8 @@ public:
 
     Model(std::string const& path, Shader* shader);
 
+    void Act(double currentFrame);
+
     void Draw();
 
 private:

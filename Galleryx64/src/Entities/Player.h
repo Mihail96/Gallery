@@ -39,6 +39,8 @@ public:
 
 	static Player* GetInstance();
 
+	void Act(double currentFrame);
+
 	void Draw();
 
 	void processInput();

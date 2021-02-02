@@ -22,6 +22,11 @@ Player* Player::GetInstance()
     return instance;
 }
 
+void Player::Act(double currentFrame)
+{
+
+}
+
 Player::Player()
 {
 	this->MaxPosition = glm::vec3(0.2f, 0.1f, 0.2f);
@@ -119,51 +124,51 @@ void Player::ProcessKeyboard(Camera_Movement direction, double deltaTime)
 
     if (direction == FORWARD)
     {
-        if (!northEntity && Front.x >= 0 || !southEntity && Front.x < 0)
+        if ((!northEntity || northEntity && !northEntity->Collison) && Front.x >= 0 || (!southEntity || southEntity && !southEntity->Collison) && Front.x < 0)
         {
             Position.x += Front.x * velocity;
         }
-        if (!eastEntity && Front.z >= 0 || !westEntity && Front.z < 0)
+        if ((!eastEntity || eastEntity && !eastEntity->Collison) && Front.z >= 0 || (!westEntity || westEntity && !westEntity->Collison) && Front.z < 0)
         {
             Position.z += Front.z * velocity;
         }
     }
     if (direction == BACKWARD)
     {
-        if (!northEntity && Front.x < 0 || !southEntity && Front.x >= 0)
+        if ((!northEntity || northEntity && !northEntity->Collison) && Front.x < 0 || (!southEntity || southEntity && !southEntity->Collison) && Front.x >= 0)
         {
             Position.x -= Front.x * velocity;
         }
-        if (!eastEntity && Front.z < 0 || !westEntity && Front.z >= 0)
+        if ((!eastEntity || eastEntity && !eastEntity->Collison) && Front.z < 0 || (!westEntity || westEntity && !westEntity->Collison) && Front.z >= 0)
         {
             Position.z -= Front.z * velocity;
         }
     }
     if (direction == LEFT)
     {
-        if (!northEntity && Right.x < 0 || !southEntity && Right.x >= 0)
+        if ((!northEntity || northEntity && !northEntity->Collison) && Right.x < 0 || (!southEntity || southEntity && !southEntity->Collison) && Right.x >= 0)
         {
             Position.x -= Right.x * velocity;
         }
-        if (!eastEntity && Right.z < 0 || !westEntity && Right.z >= 0)
+        if ((!eastEntity || eastEntity && !eastEntity->Collison) && Right.z < 0 || (!westEntity || westEntity && !westEntity->Collison) && Right.z >= 0)
         {
             Position.z -= Right.z * velocity;
         }
     }
     if (direction == RIGHT)
     {
-        if (!northEntity && Right.x >= 0 || !southEntity && Right.x < 0)
+        if ((!northEntity || northEntity && !northEntity->Collison) && Right.x >= 0 || (!southEntity || southEntity && !southEntity->Collison) && Right.x < 0)
         {
             Position.x += Right.x * velocity;
         }
-        if (!eastEntity && Right.z >= 0 || !westEntity && Right.z < 0)
+        if ((!eastEntity || eastEntity && !eastEntity->Collison) && Right.z >= 0 || (!westEntity || westEntity && !westEntity->Collison) && Right.z < 0)
         {
             Position.z += Right.z * velocity;
         }
     }
     if (direction == JUMP && GravityVelocity == 0)
     {
-        GravityVelocity = -4;
+        GravityVelocity = -2;
         Position.y += 0.1;
     }
 

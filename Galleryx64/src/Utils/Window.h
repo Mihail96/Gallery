@@ -4,8 +4,8 @@
 class Window
 {
 public:
-    const static unsigned int SCR_WIDTH = 800;
-    const static unsigned int SCR_HEIGHT = 600;
+    const static unsigned int SCR_WIDTH = 1000;
+    const static unsigned int SCR_HEIGHT = 800;
     static int Result;
     static GLFWwindow* window;
 
