@@ -211,7 +211,7 @@ void Player::ProcessMouseScroll(double yoffset)
     if (Zoom >= 45.0f)
         Zoom = 45.0f;
 
-    Position = glm::vec3(3.0f, 4.0f, 4.0f);
+    Position = glm::vec3(30.0f, 2.2f, 30.0f);
 }
 
 void Player::MoveCamera(glm::vec3* position, glm::vec3* up, float yaw, float pitch)
