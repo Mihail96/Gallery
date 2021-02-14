@@ -1,0 +1,40 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl body
+Ns 25.455841
+Ka 1.000000 1.000000 1.000000
+Kd 0.588235 0.588235 0.588235
+Ks 0.700000 0.700000 0.700000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump body_normal.png
+map_Kd body_baseColor.png
+map_d body_baseColor.png
+
+newmtl cloth
+Ns 25.455841
+Ka 1.000000 1.000000 1.000000
+Kd 0.588235 0.588235 0.588235
+Ks 0.700000 0.700000 0.700000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump cloth_normal.png
+map_Kd cloth_baseColor.png
+
+newmtl jinshi
+Ns 25.455841
+Ka 1.000000 1.000000 1.000000
+Kd 0.588235 0.588235 0.588235
+Ks 0.700000 0.700000 0.700000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump jinshi_normal.png
+map_Kd jinshi_baseColor.png
+map_d jinshi_baseColor.png

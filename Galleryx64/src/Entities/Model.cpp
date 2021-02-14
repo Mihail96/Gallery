@@ -25,6 +25,13 @@ Model::Model(std::string const& path, Shader* shader)
 
     this->shader = shader;
     Collison = false;
+    Scale = glm::vec3(1, 1, 1);
+    direction = glm::vec3(1.0f, 0.0f, 1.0f);
+    color = glm::vec3(1.0f, 1.0f, 1.0f);
+    rotate = false;
+    spotLight = new SpotLight();
+    spotLight->CutOff = glm::cos(glm::radians(12.5f));
+    spotLight->OuterCutOff = glm::cos(glm::radians(25.0f));
 
     World* world = World::GetInstance();
 
@@ -36,6 +43,114 @@ Model::Model(std::string const& path, Shader* shader)
 void Model::Act(double currentFrame)
 {
     CurrentFrame = currentFrame;
+    DeltaTime = currentFrame - LastFrame;
+
+    CalculateRainbow();
+
+    if (DeltaTime > MaxActTime)
+    {
+        LastFrame = currentFrame;
+    }
+}
+
+void Model::CalculateRainbow()
+{
+    float changeSpeed = 0.05f;
+    if (rainbowEffectState == 0)
+    {
+        //Increase Red and Blue untill 1 1 1 then 1
+        color.x += changeSpeed;
+        color.z += changeSpeed;
+
+        if (color.x >= 1.0f || color.z >= 1.0f)
+        {
+            color.x = 1.0f;
+            color.y = 1.0f;
+            color.z = 1.0f;
+            rainbowEffectState = 1;
+        }
+    }
+    if (rainbowEffectState == 1)
+    {
+        //Decrease Blue untill 1 1 0 then 2
+        color.z -= changeSpeed;
+
+        if (color.z <= 0.0f)
+        {
+            color.x = 1.0f;
+            color.y = 1.0f;
+            color.z = 0.0f;
+            rainbowEffectState = 2;
+        }
+    }
+    if (rainbowEffectState == 2)
+    {
+        //Decrease Green untill 1 0 0 then 3
+        color.y -= changeSpeed;
+
+        if (color.y <= 0.0f)
+        {
+            color.x = 1.0f;
+            color.y = 0.0f;
+            color.z = 0.0f;
+            rainbowEffectState = 3;
+        }
+    }
+    if (rainbowEffectState == 3)
+    {
+        //Increase Blue untill 1 0 1 then 4
+        color.z += changeSpeed;
+
+        if (color.z >= 1.0f)
+        {
+            color.x = 1.0f;
+            color.y = 0.0f;
+            color.z = 1.0f;
+            rainbowEffectState = 4;
+        }
+    }
+    if (rainbowEffectState == 4)
+    {
+        //Decrease Red untill 0 0 1 then 5
+        color.z -= changeSpeed;
+
+        if (color.z <= 0.0f)
+        {
+            color.x = 0.0f;
+            color.y = 0.0f;
+            color.z = 1.0f;
+            rainbowEffectState = 5;
+        }
+    }
+    if (rainbowEffectState == 5)
+    {
+        //Increase Green untill 0 1 1 then 6
+        color.y += changeSpeed;
+
+        if (color.y >= 1.0f)
+        {
+            color.x = 0.0f;
+            color.y = 1.0f;
+            color.z = 1.0f;
+            rainbowEffectState = 6;
+        }
+    }
+    if (rainbowEffectState == 6)
+    {
+        //Decrease Blue untill 0 1 0 then 0
+        color.z -= changeSpeed;
+
+        if (color.z <= 0.0f)
+        {
+            color.x = 0.0f;
+            color.y = 1.0f;
+            color.z = 0.0f;
+            rainbowEffectState = 0;
+        }
+    }
+
+    spotLight->Diffuse = color;
+    spotLight->Specular = color;
 }
 
 void Model::Draw()
@@ -51,17 +166,20 @@ void Model::Draw()
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, Position);
-    model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+    model = glm::scale(model, glm::vec3(Scale));
 
-    float angle = CurrentFrame * 10;
-    model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+    if (rotate)
+    {
+        float angle = CurrentFrame * 20;
+        model = glm::rotate(model, glm::radians(-angle), glm::vec3(0.0f, 1.0f, 0.0f));
+        direction.x = static_cast<float>(cos(glm::radians(static_cast<double>(angle + 90.0f))));
+        direction.z = static_cast<float>(sin(glm::radians(static_cast<double>(angle + 90.0f))));
+    }
 
     shader->setMat4("model", model);
 
     shader->setVec3("viewPos", player->Position);
 
-    shader->setInt("material.diffuse", 0);
-    shader->setInt("material.specular", 1);
     shader->setFloat("material.shininess", 32.0f);
 
     shader->setVec3("dirLight.direction", world->directionalLight->Direction);
@@ -84,7 +202,10 @@ void Model::Draw()
         shader->setFloat("spotLight[0].outerCutOff", player->spotLight->OuterCutOff);
     }
 
-    shader->setVec3("spotLight[1].position", world->spotLightBlock->Position);
+    glm::vec3 spotLightPosition = glm::vec3(world->spotLightBlock->Position.x,
+                                            world->spotLightBlock->Position.y + world->spotLightBlock->spotLight->height,
+                                            world->spotLightBlock->Position.z);
+    shader->setVec3("spotLight[1].position", spotLightPosition);
     shader->setVec3("spotLight[1].direction", world->spotLightBlock->direction);
     shader->setVec3("spotLight[1].ambient", world->spotLightBlock->spotLight->Ambient);
     shader->setVec3("spotLight[1].diffuse", world->spotLightBlock->spotLight->Diffuse);
@@ -214,7 +335,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
             glm::vec2 vec;
 
             vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
+            vec.y = 1-mesh->mTextureCoords[0][i].y;
             vertex.TexCoords = vec;
 
             vector.x = mesh->mTangents[i].x;
@@ -244,23 +365,61 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
         }
     }
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    std::vector<Texture> maps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
+    textures.insert(textures.end(), maps.begin(), maps.end());
 
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    maps = loadMaterialTextures(material, aiTextureType_SPECULAR);
+    textures.insert(textures.end(), maps.begin(), maps.end());
 
-    std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    maps = loadMaterialTextures(material, aiTextureType_HEIGHT);
+    textures.insert(textures.end(), maps.begin(), maps.end());
 
-    std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    maps = loadMaterialTextures(material, aiTextureType_AMBIENT);
+    textures.insert(textures.end(), maps.begin(), maps.end());
 
-    std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    maps = loadMaterialTextures(material, aiTextureType_EMISSIVE);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_NORMALS);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_SHININESS);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_OPACITY);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_DISPLACEMENT);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_LIGHTMAP);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_REFLECTION);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_BASE_COLOR);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_NORMAL_CAMERA);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_EMISSION_COLOR);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_METALNESS);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_DIFFUSE_ROUGHNESS);
+    textures.insert(textures.end(), maps.begin(), maps.end());
+
+    maps = loadMaterialTextures(material, aiTextureType_AMBIENT_OCCLUSION);
+    textures.insert(textures.end(), maps.begin(), maps.end());
 
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
 {
     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -281,7 +440,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         {
             Texture texture;
             texture.id = TextureFromFile(str.C_Str(), this->directory);
-            texture.type = typeName;
+            texture.type = type;
             texture.path = str.C_Str();
             textures.push_back(texture);
             textures_loaded.push_back(texture);

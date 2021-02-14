@@ -63,6 +63,9 @@ void Block::Draw()
         model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
+    shader->setInt("material.hasDiffusal", 1);
+    shader->setInt("material.hasSpecular", 1);
+
     if (this->pointLight)
     {
         if (lightaction1)
@@ -104,7 +107,10 @@ void Block::Draw()
             shader->setFloat("spotLight[0].outerCutOff", player->spotLight->OuterCutOff);
         }
 
-        shader->setVec3("spotLight[1].position", world->spotLightBlock->Position);
+        glm::vec3 spotLightPosition = glm::vec3(world->spotLightBlock->Position.x,
+                                                world->spotLightBlock->Position.y + world->spotLightBlock->spotLight->height,
+                                                world->spotLightBlock->Position.z);
+        shader->setVec3("spotLight[1].position", spotLightPosition);
         shader->setVec3("spotLight[1].direction", world->spotLightBlock->direction);
         shader->setVec3("spotLight[1].ambient", world->spotLightBlock->spotLight->Ambient);
         shader->setVec3("spotLight[1].diffuse", world->spotLightBlock->spotLight->Diffuse);
@@ -166,12 +172,12 @@ void Block::Draw()
     }
 
     glActiveTexture(GL_TEXTURE0);
-
     glBindTexture(GL_TEXTURE_2D, TextureId);
 
     glBindVertexArray(BlockRenderer::GetInstance().GetVAO());
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 
+    glBindTexture(GL_TEXTURE_2D, 0);
     glActiveTexture(GL_TEXTURE0);
 }

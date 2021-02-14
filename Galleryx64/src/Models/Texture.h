@@ -2,11 +2,12 @@
 #define Texture_H
 
 #include <string>
+#include <assimp/material.h>
 
 struct Texture
 {
     unsigned int id;
-    std::string type;
+    aiTextureType type;
     std::string path;
 };
 

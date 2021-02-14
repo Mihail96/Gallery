@@ -11,6 +11,7 @@ class Entity
 {
 public:
 	glm::vec3 Position;
+	glm::vec3 Scale;
 	glm::vec3 MaxPosition;
 	glm::vec3 MinPosition;
 	glm::vec3 direction;

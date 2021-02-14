@@ -7,13 +7,15 @@
 class SpotLight : public Light
 {
 public:
+    float height;
     float CutOff;
     float OuterCutOff;
     float Constant;
     float Linear;
     float Quadratic;
 
-    SpotLight(float cutOff =       glm::cos(glm::radians(12.5f)),
+    SpotLight(float height =       0.0f,
+              float cutOff =       glm::cos(glm::radians(12.5f)),
               float outerCutOff =  glm::cos(glm::radians(15.0f)),
               float constant =     1.0f,
               float linear =       0.06f,

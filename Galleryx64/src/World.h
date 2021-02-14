@@ -4,7 +4,6 @@
 #include "Entities/Entity.h"
 #include "Entities/Player.h"
 #include "Lights/DirectionalLight.h"
-#include "Entities/SpotLightBlock.h"
 
 class World
 {

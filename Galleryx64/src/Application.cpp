@@ -61,9 +61,24 @@ int main()
     name = "res/textures/fabric3.jpg";
     loadedTextures.push_back(world->LoadTexture(name));//5
 
-    std::string modelPath = std::string("res/models/backpack/backpack.obj");
-    Entity* backpackModel = new Model(modelPath, &blockShader);
-    world->InsertEntity(backpackModel, 28.0f, 2.5f, 33.0f);
+    std::string modelPath = std::string("res/models/florian/model.obj");
+    Model* florianModel = new Model(modelPath, &blockShader);
+    florianModel->Scale = glm::vec3(0.1f, 0.1f, 0.1f);
+    world->InsertEntity(florianModel, 30.5f, 2.0f, 33.5f);
+
+    modelPath = std::string("res/models/pearl/model.obj");
+    Model* pearlModel = new Model(modelPath, &blockShader);
+    world->InsertEntity(pearlModel, 28.0f, 2.0f, 33.5f);
+
+    //Spot Light
+    modelPath = std::string("res/models/spotLight/model.obj");
+    Model* spotLightModel = new Model(modelPath, &blockShader);
+    world->ActiveEntities.push_back(spotLightModel);
+    spotLightModel->Scale = glm::vec3(0.5f, 0.5f, 0.5f);
+    spotLightModel->rotate = true;
+    spotLightModel->spotLight->height = 0.85f;
+    world->spotLightBlock = spotLightModel;
+    world->InsertEntity(spotLightModel, 19.5f, 3.0f, 28.5f);
 
     Entity* light2 = new Block(loadedTextures[0], &lightShader);
     light2->pointLight = new PointLight();
@@ -150,13 +165,7 @@ int main()
     world->ActiveEntities.push_back(light6);
     world->InsertEntity(light6, 22.0f, 3.5f, 31.0f);
 
-    //SpotLight And Covers
-    Entity* spotLightBlock = new SpotLightBlock(loadedTextures[0], &lightShader);
-    spotLightBlock->Collison = false;
-    world->ActiveEntities.push_back(spotLightBlock);
-    world->InsertEntity(spotLightBlock, 17.5f, 3.5f, 27.5f);
-    world->spotLightBlock = spotLightBlock;
-    //Cover
+    //Spot Light Cover
     block = new Block(loadedTextures[0], &blockShader);
     world->InsertEntity(block, 16.0f, 3.0f, 25.0f);
     block = new Block(loadedTextures[0], &blockShader);

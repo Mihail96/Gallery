@@ -15,6 +15,9 @@ public:
     std::vector<Texture> textures_loaded;
     std::vector<Mesh> meshes;
     std::string directory;
+    glm::vec3 color;
+    bool rotate;
+    int rainbowEffectState = 0;
 
     Model(std::string const& path, Shader* shader);
 
@@ -29,6 +32,8 @@ private:
 
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
+
+    void CalculateRainbow();
 };
 #endif

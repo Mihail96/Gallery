@@ -1,7 +1,8 @@
 #include "SpotLight.h"
 
-SpotLight::SpotLight(float cutOff, float outerCutOff, float constant, float linear, float quadratic, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
+SpotLight::SpotLight(float height, float cutOff, float outerCutOff, float constant, float linear, float quadratic, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
 {
+	this->height = height;
 	this->CutOff = cutOff;
 	this->OuterCutOff = outerCutOff;
 	this->Constant = constant;

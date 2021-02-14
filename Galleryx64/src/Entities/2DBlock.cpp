@@ -44,9 +44,6 @@ void TwoDBlock::Draw()
 	Player* player = Player::GetInstance();
 	World* world = World::GetInstance();
 
-    unsigned int TextureId = TextureIds[textureCounter];
-    glBindTexture(GL_TEXTURE_2D, TextureId);
-
 	shader->use();
 	glm::mat4 projection = glm::perspective(player->Zoom, (float)Window::SCR_WIDTH / (float)Window::SCR_HEIGHT, 0.1f, 100.0f);
 	glm::mat4 view = player->GetViewMatrix();
@@ -56,6 +53,9 @@ void TwoDBlock::Draw()
     model = glm::translate(model, Position);
 
 	shader->setMat4("model", model);
+
+    shader->setInt("material.hasDiffusal", 1);
+    shader->setInt("material.hasSpecular", 1);
 
     shader->setVec3("viewPos", player->Position);
 
@@ -132,9 +132,13 @@ void TwoDBlock::Draw()
         shader->setFloat("pointLights[" + s + "].quadratic", this->illuminatedByEntities[i]->pointLight->Quadratic);
     }
 
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, TextureIds[textureCounter]);
+
 	glBindVertexArray(TwoDBlockRenderer::GetInstance().GetVAO());
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
+    glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
 }
