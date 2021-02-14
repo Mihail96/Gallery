@@ -3,13 +3,11 @@
 
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures)
 {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
-
-    setupMesh();
 }
 
 void Mesh::Draw(Shader& shader)
@@ -19,9 +17,9 @@ void Mesh::Draw(Shader& shader)
     for (unsigned int i = 0; i < textures.size(); i++)
     {
         glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+        glBindTexture(GL_TEXTURE_2D, textures[i]->id);
 
-        switch (textures[i].type)
+        switch (textures[i]->type)
         {
             case aiTextureType_DIFFUSE:
                 shader.setInt("material.diffuseTexture", GL_TEXTURE0 + i);

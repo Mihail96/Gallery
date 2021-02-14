@@ -4,6 +4,8 @@
 #include "Entities/Entity.h"
 #include "Entities/Player.h"
 #include "Lights/DirectionalLight.h"
+#include <stack>
+#include "Entities/Model.h"
 
 class World
 {
@@ -18,6 +20,7 @@ public:
 	std::vector<Entity*> Entities;
 	Entity** Coordinates;
 	std::vector<Entity*> ActiveEntities;
+	std::stack<Model*> modelsToLoad;
 	DirectionalLight* directionalLight;
 
 	static World* GetInstance();
@@ -31,6 +34,8 @@ public:
 	void ProcessTime();
 
 	void InitEntities(unsigned int worldSize);
+
+	void SetupModels();
 
 	unsigned int LoadTexture(const char* fileName);
 

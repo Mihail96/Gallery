@@ -43,6 +43,18 @@ void World::SetCamera(glm::vec3* position, glm::vec3* up, float yaw, float pitch
 	this->Player->MoveCamera(position, up, yaw, pitch);
 }
 
+void World::SetupModels()
+{
+	while (modelsToLoad.size() != 0)
+	{
+		Model* model = modelsToLoad.top();
+		modelsToLoad.pop();
+
+		model->Setup();
+		InsertEntity(model, model->Position.x, model->Position.y, model->Position.z);
+	}
+}
+
 void World::Draw()
 {
 	for (unsigned int i = 0; i < Entities.size(); i++)

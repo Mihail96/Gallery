@@ -10,8 +10,12 @@
 #include "Entities/Block.h"
 #include "Utils/Window.h"
 #include "Entities/2DBlock.h"
+#include <thread>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void LoadFlorian(World* world, Shader* shader);
+void LoadPearl(World* world, Shader* shader);
+void LoadSpotLight(World* world, Shader* shader);
 
 const unsigned int WorldSize = 50;
 
@@ -61,24 +65,9 @@ int main()
     name = "res/textures/fabric3.jpg";
     loadedTextures.push_back(world->LoadTexture(name));//5
 
-    std::string modelPath = std::string("res/models/florian/model.obj");
-    Model* florianModel = new Model(modelPath, &blockShader);
-    florianModel->Scale = glm::vec3(0.1f, 0.1f, 0.1f);
-    world->InsertEntity(florianModel, 30.5f, 2.0f, 33.5f);
-
-    modelPath = std::string("res/models/pearl/model.obj");
-    Model* pearlModel = new Model(modelPath, &blockShader);
-    world->InsertEntity(pearlModel, 28.0f, 2.0f, 33.5f);
-
-    //Spot Light
-    modelPath = std::string("res/models/spotLight/model.obj");
-    Model* spotLightModel = new Model(modelPath, &blockShader);
-    world->ActiveEntities.push_back(spotLightModel);
-    spotLightModel->Scale = glm::vec3(0.5f, 0.5f, 0.5f);
-    spotLightModel->rotate = true;
-    spotLightModel->spotLight->height = 0.85f;
-    world->spotLightBlock = spotLightModel;
-    world->InsertEntity(spotLightModel, 19.5f, 3.0f, 28.5f);
+    std::thread threadFlorian(LoadFlorian, world, &blockShader);
+    std::thread threadPearl(LoadPearl, world, &blockShader);
+    std::thread threadSpotLight(LoadSpotLight, world, &blockShader);
 
     Entity* light2 = new Block(loadedTextures[0], &lightShader);
     light2->pointLight = new PointLight();
@@ -232,14 +221,53 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        world->SetupModels();
+
         world->Draw();
 
         glfwSwapBuffers(Window::window);
         glfwPollEvents();
     }
 
+    threadFlorian.detach();
+    threadPearl.detach();
+    threadSpotLight.detach();
+
     glfwTerminate();
     return 0;
+}
+
+void LoadFlorian(World* world, Shader* shader)
+{
+    std::string modelPath = std::string("res/models/florian/model.obj");
+    Model* florianModel = new Model(modelPath, shader);
+    florianModel->Scale = glm::vec3(0.1f, 0.1f, 0.1f);
+    florianModel->Position = glm::vec3(30.5f, 2.0f, 33.5f);
+
+    world->modelsToLoad.push(florianModel);
+}
+
+void LoadPearl(World* world, Shader* shader)
+{
+    std::string modelPath = std::string("res/models/pearl/model.obj");
+    Model* pearlModel = new Model(modelPath, shader);
+    pearlModel->Position = glm::vec3(28.0f, 2.0f, 33.5f);
+
+    world->modelsToLoad.push(pearlModel);
+}
+
+void LoadSpotLight(World* world, Shader* shader)
+{
+    std::string modelPath = std::string("res/models/spotLight/model.obj");
+    Model* spotLightModel = new Model(modelPath, shader);
+    world->ActiveEntities.push_back(spotLightModel);
+    spotLightModel->Scale = glm::vec3(0.5f, 0.5f, 0.5f);
+    spotLightModel->rotate = true;
+    spotLightModel->spotLight->height = 0.85f;
+    spotLightModel->Position = glm::vec3(19.5f, 3.0f, 28.5f);
+    world->spotLightBlock = spotLightModel;
+
+    world->modelsToLoad.push(spotLightModel);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

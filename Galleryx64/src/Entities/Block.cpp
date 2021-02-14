@@ -107,19 +107,22 @@ void Block::Draw()
             shader->setFloat("spotLight[0].outerCutOff", player->spotLight->OuterCutOff);
         }
 
-        glm::vec3 spotLightPosition = glm::vec3(world->spotLightBlock->Position.x,
-                                                world->spotLightBlock->Position.y + world->spotLightBlock->spotLight->height,
-                                                world->spotLightBlock->Position.z);
-        shader->setVec3("spotLight[1].position", spotLightPosition);
-        shader->setVec3("spotLight[1].direction", world->spotLightBlock->direction);
-        shader->setVec3("spotLight[1].ambient", world->spotLightBlock->spotLight->Ambient);
-        shader->setVec3("spotLight[1].diffuse", world->spotLightBlock->spotLight->Diffuse);
-        shader->setVec3("spotLight[1].specular", world->spotLightBlock->spotLight->Specular);
-        shader->setFloat("spotLight[1].constant", world->spotLightBlock->spotLight->Constant);
-        shader->setFloat("spotLight[1].linear", world->spotLightBlock->spotLight->Linear);
-        shader->setFloat("spotLight[1].quadratic", world->spotLightBlock->spotLight->Quadratic);
-        shader->setFloat("spotLight[1].cutOff", world->spotLightBlock->spotLight->CutOff);
-        shader->setFloat("spotLight[1].outerCutOff", world->spotLightBlock->spotLight->OuterCutOff);
+        if (world->spotLightBlock != nullptr)
+        {
+            glm::vec3 spotLightPosition = glm::vec3(world->spotLightBlock->Position.x,
+                                                    world->spotLightBlock->Position.y + world->spotLightBlock->spotLight->height,
+                                                    world->spotLightBlock->Position.z);
+            shader->setVec3("spotLight[1].position", spotLightPosition);
+            shader->setVec3("spotLight[1].direction", world->spotLightBlock->direction);
+            shader->setVec3("spotLight[1].ambient", world->spotLightBlock->spotLight->Ambient);
+            shader->setVec3("spotLight[1].diffuse", world->spotLightBlock->spotLight->Diffuse);
+            shader->setVec3("spotLight[1].specular", world->spotLightBlock->spotLight->Specular);
+            shader->setFloat("spotLight[1].constant", world->spotLightBlock->spotLight->Constant);
+            shader->setFloat("spotLight[1].linear", world->spotLightBlock->spotLight->Linear);
+            shader->setFloat("spotLight[1].quadratic", world->spotLightBlock->spotLight->Quadratic);
+            shader->setFloat("spotLight[1].cutOff", world->spotLightBlock->spotLight->CutOff);
+            shader->setFloat("spotLight[1].outerCutOff", world->spotLightBlock->spotLight->OuterCutOff);
+        }
 
         if (!this->LightsCalculated)
         {

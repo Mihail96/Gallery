@@ -125,6 +125,9 @@
     <ClInclude Include="src\Entities\2DBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Models\TextureData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\models\backpack\ao.jpg">

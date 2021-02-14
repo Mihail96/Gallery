@@ -28,6 +28,7 @@ Model::Model(std::string const& path, Shader* shader)
     Scale = glm::vec3(1, 1, 1);
     direction = glm::vec3(1.0f, 0.0f, 1.0f);
     color = glm::vec3(1.0f, 1.0f, 1.0f);
+    rainbowEffectState = 0;
     rotate = false;
     spotLight = new SpotLight();
     spotLight->CutOff = glm::cos(glm::radians(12.5f));
@@ -50,6 +51,20 @@ void Model::Act(double currentFrame)
     if (DeltaTime > MaxActTime)
     {
         LastFrame = currentFrame;
+    }
+}
+
+void Model::Setup()
+{
+    for (int i = 0; i < textures_loaded.size(); i++)
+    {
+        textures_loaded[i]->id = SetupTexture(textures_loaded[i]->textureData);
+        delete textures_loaded[i]->textureData;
+    }
+
+    for (int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].setupMesh();
     }
 }
 
@@ -202,19 +217,22 @@ void Model::Draw()
         shader->setFloat("spotLight[0].outerCutOff", player->spotLight->OuterCutOff);
     }
 
-    glm::vec3 spotLightPosition = glm::vec3(world->spotLightBlock->Position.x,
-                                            world->spotLightBlock->Position.y + world->spotLightBlock->spotLight->height,
-                                            world->spotLightBlock->Position.z);
-    shader->setVec3("spotLight[1].position", spotLightPosition);
-    shader->setVec3("spotLight[1].direction", world->spotLightBlock->direction);
-    shader->setVec3("spotLight[1].ambient", world->spotLightBlock->spotLight->Ambient);
-    shader->setVec3("spotLight[1].diffuse", world->spotLightBlock->spotLight->Diffuse);
-    shader->setVec3("spotLight[1].specular", world->spotLightBlock->spotLight->Specular);
-    shader->setFloat("spotLight[1].constant", world->spotLightBlock->spotLight->Constant);
-    shader->setFloat("spotLight[1].linear", world->spotLightBlock->spotLight->Linear);
-    shader->setFloat("spotLight[1].quadratic", world->spotLightBlock->spotLight->Quadratic);
-    shader->setFloat("spotLight[1].cutOff", world->spotLightBlock->spotLight->CutOff);
-    shader->setFloat("spotLight[1].outerCutOff", world->spotLightBlock->spotLight->OuterCutOff);
+    if (world->spotLightBlock != nullptr)
+    {
+        glm::vec3 spotLightPosition = glm::vec3(world->spotLightBlock->Position.x,
+                                                world->spotLightBlock->Position.y + world->spotLightBlock->spotLight->height,
+                                                world->spotLightBlock->Position.z);
+        shader->setVec3("spotLight[1].position", spotLightPosition);
+        shader->setVec3("spotLight[1].direction", world->spotLightBlock->direction);
+        shader->setVec3("spotLight[1].ambient", world->spotLightBlock->spotLight->Ambient);
+        shader->setVec3("spotLight[1].diffuse", world->spotLightBlock->spotLight->Diffuse);
+        shader->setVec3("spotLight[1].specular", world->spotLightBlock->spotLight->Specular);
+        shader->setFloat("spotLight[1].constant", world->spotLightBlock->spotLight->Constant);
+        shader->setFloat("spotLight[1].linear", world->spotLightBlock->spotLight->Linear);
+        shader->setFloat("spotLight[1].quadratic", world->spotLightBlock->spotLight->Quadratic);
+        shader->setFloat("spotLight[1].cutOff", world->spotLightBlock->spotLight->CutOff);
+        shader->setFloat("spotLight[1].outerCutOff", world->spotLightBlock->spotLight->OuterCutOff);
+    }
 
     if (!this->LightsCalculated)
     {
@@ -301,7 +319,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<Texture*> textures;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -365,7 +383,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
         }
     }
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    std::vector<Texture> maps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
+    std::vector<Texture*> maps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
     textures.insert(textures.end(), maps.begin(), maps.end());
 
     maps = loadMaterialTextures(material, aiTextureType_SPECULAR);
@@ -419,9 +437,10 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
+std::vector<Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
 {
-    std::vector<Texture> textures;
+    std::vector<Texture*> textures;
+
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
@@ -429,7 +448,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         bool skip = false;
         for (unsigned int j = 0; j < textures_loaded.size(); j++)
         {
-            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
+            if (std::strcmp(textures_loaded[j]->path.data(), str.C_Str()) == 0)
             {
                 textures.push_back(textures_loaded[j]);
                 skip = true;
@@ -438,12 +457,14 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         }
         if (!skip)
         {
-            Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), this->directory);
-            texture.type = type;
-            texture.path = str.C_Str();
-            textures.push_back(texture);
+            Texture* texture = new Texture();
+
+            texture->textureData = TextureFromFileAsync(str.C_Str(), directory);
+            texture->type = type;
+            texture->path = str.C_Str();
             textures_loaded.push_back(texture);
+
+            textures.push_back(texture);
         }
     }
     return textures;
