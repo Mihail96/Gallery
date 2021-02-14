@@ -25,6 +25,9 @@ public:
 	bool Collison = true;
 	bool actionBlock1 = false;
 	bool lightaction1 = false;
+	bool lightactionPulse = false;
+	int pulseControl = 0;
+	float pulseChange = 0.0f;
 
 	double DeltaTime = 0;
 	double LastFrame = 0;

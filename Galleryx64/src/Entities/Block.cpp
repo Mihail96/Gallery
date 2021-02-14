@@ -30,11 +30,40 @@ void Block::Act(double currentFrame)
     CurrentFrame = currentFrame;
     DeltaTime = currentFrame - LastFrame;
 
-    if (lightaction1)
+    if (lightactionPulse)
     {
-        if (DeltaTime > MaxActTime)
+        float lightChange = 0.1f;
+        if (pulseControl == 0)
         {
-            LastFrame = currentFrame;
+            pulseChange += lightChange;
+
+            if (pulseChange >= 1.0f)
+            {
+                pulseChange = 1.0f;
+                pulseControl = 1;
+            }
+        }
+        if (pulseControl == 1)
+        {
+            pulseChange -= lightChange;
+
+            if (pulseChange <= 0.0f)
+            {
+                pulseChange = 0.0f;
+                pulseControl = 0;
+            }
+        }
+        color = glm::vec3(pulseChange, pulseChange, pulseChange);
+        pointLight->Diffuse = color;
+        pointLight->Specular = color;
+    }
+
+    if (DeltaTime > MaxActTime)
+    {
+        LastFrame = currentFrame;
+
+        if (lightaction1)
+        {
             Position.y = 3.0f;
 
             color = glm::vec3((float)std::rand() / RAND_MAX, (float)std::rand() / RAND_MAX, (float)std::rand() / RAND_MAX);

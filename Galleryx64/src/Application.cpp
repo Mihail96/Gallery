@@ -154,6 +154,14 @@ int main()
     world->ActiveEntities.push_back(light6);
     world->InsertEntity(light6, 22.0f, 3.5f, 31.0f);
 
+    // Pulsating light
+    Entity* pulsingLight = new Block(loadedTextures[0], &lightShader);
+    pulsingLight->pointLight = new PointLight();
+    pulsingLight->Collison = false;
+    pulsingLight->lightactionPulse = true;
+    world->ActiveEntities.push_back(pulsingLight);
+    world->InsertEntity(pulsingLight, 15.5f, 3.5f, 34.5f);
+
     //Spot Light Cover
     block = new Block(loadedTextures[0], &blockShader);
     world->InsertEntity(block, 16.0f, 3.0f, 25.0f);
