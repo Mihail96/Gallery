@@ -1,0 +1,44 @@
+#
+#
+#
+
+newmtl  Mesh_cropped_textured_mesh_0
+illum 2
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ns 1.000000
+map_Kd cropped_textured_mesh_0_Fh8nRfDU.jpg
+
+newmtl  Mesh_cropped_textured_mesh_1
+illum 2
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ns 1.000000
+map_Kd cropped_textured_mesh_1_Fh8nRfDU.jpg
+
+newmtl  Mesh_cropped_textured_mesh_2
+illum 2
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ns 1.000000
+map_Kd cropped_textured_mesh_2_Fh8nRfDU.jpg
+
+newmtl  Mesh_cropped_textured_mesh_3
+illum 2
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ns 1.000000
+map_Kd cropped_textured_mesh_3_Fh8nRfDU.jpg
+
+newmtl  Mesh_cropped_textured_mesh_4
+illum 2
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ns 1.000000
+map_Kd cropped_textured_mesh_4_Fh8nRfDU.jpg
+

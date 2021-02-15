@@ -16,6 +16,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void LoadFlorian(World* world, Shader* shader);
 void LoadPearl(World* world, Shader* shader);
 void LoadSpotLight(World* world, Shader* shader);
+void LoadHorse(World* world, Shader* shader);
+void LoadGirls(World* world, Shader* shader);
+void LoadGaul(World* world, Shader* shader);
+void LoadUtilityBox(World* world, Shader* shader);
 
 const unsigned int WorldSize = 50;
 
@@ -69,6 +73,11 @@ int main()
     std::thread threadPearl(LoadPearl, world, &blockShader);
     std::thread threadSpotLight(LoadSpotLight, world, &blockShader);
 
+    std::thread threadHorse(LoadHorse, world, &blockShader);
+    std::thread threadGirls(LoadGirls, world, &blockShader);
+    std::thread threadGaul(LoadGaul, world, &blockShader);
+    std::thread threadUtilityBox(LoadUtilityBox, world, &blockShader);
+
     Entity* light2 = new Block(loadedTextures[0], &lightShader);
     light2->pointLight = new PointLight();
     light2->Collison = false;
@@ -92,13 +101,13 @@ int main()
     Entity* twoDBlock = new TwoDBlock(loadedTextures, &twoDShader);
     twoDBlock->pointLight = new PointLight();
     twoDBlock->Collison = false;
-    world->InsertEntity(twoDBlock, 30.5f, 3.0f, 26.0001f);
+    world->InsertEntity(twoDBlock, 32.5f, 3.0f, 26.0001f);
 
     //Picture Stand
     Entity* block = new Block(loadedTextures[2], &blockShader);
-    world->InsertEntity(block, 30, 2, 25);
+    world->InsertEntity(block, 32, 2, 25);
     block = new Block(loadedTextures[2], &blockShader);
-    world->InsertEntity(block, 30, 3, 25);
+    world->InsertEntity(block, 32, 3, 25);
 
     //ARCH
     //1
@@ -240,6 +249,10 @@ int main()
     threadFlorian.detach();
     threadPearl.detach();
     threadSpotLight.detach();
+    threadHorse.detach();
+    threadGirls.detach();
+    threadGaul.detach();
+    threadUtilityBox.detach();
 
     glfwTerminate();
     return 0;
@@ -249,6 +262,7 @@ void LoadFlorian(World* world, Shader* shader)
 {
     std::string modelPath = std::string("res/models/florian/model.obj");
     Model* florianModel = new Model(modelPath, shader);
+    florianModel->rotate = true;
     florianModel->Scale = glm::vec3(0.1f, 0.1f, 0.1f);
     florianModel->Position = glm::vec3(30.5f, 2.0f, 33.5f);
 
@@ -260,6 +274,7 @@ void LoadPearl(World* world, Shader* shader)
     std::string modelPath = std::string("res/models/pearl/model.obj");
     Model* pearlModel = new Model(modelPath, shader);
     pearlModel->Position = glm::vec3(28.0f, 2.0f, 33.5f);
+    pearlModel->rotate = true;
 
     world->modelsToLoad.push(pearlModel);
 }
@@ -276,6 +291,42 @@ void LoadSpotLight(World* world, Shader* shader)
     world->spotLightBlock = spotLightModel;
 
     world->modelsToLoad.push(spotLightModel);
+}
+
+void LoadGaul(World* world, Shader* shader)
+{
+    std::string modelPath = std::string("res/models/gaul/model.obj");
+    Model* gaulModel = new Model(modelPath, shader);
+    gaulModel->Position = glm::vec3(33.0f, 2.0f, 33.5f);
+    gaulModel->rotate = true;
+
+    world->modelsToLoad.push(gaulModel);
+}
+
+void LoadHorse(World* world, Shader* shader)
+{
+    std::string modelPath = std::string("res/models/horse/model.obj");
+    Model* horseModel = new Model(modelPath, shader);
+    horseModel->Position = glm::vec3(34.0f, 2.0f, 30.0f);
+    world->modelsToLoad.push(horseModel);
+}
+
+void LoadGirls(World* world, Shader* shader)
+{
+    std::string modelPath = std::string("res/models/girlsOnBench/model.obj");
+    Model* girlslModel = new Model(modelPath, shader);
+    girlslModel->Position = glm::vec3(29.0f, 2.0f, 27.0f);
+
+    world->modelsToLoad.push(girlslModel);
+}
+
+void LoadUtilityBox(World* world, Shader* shader)
+{
+    std::string modelPath = std::string("res/models/utilityBox/model.obj");
+    Model* utilityBoxModel = new Model(modelPath, shader);
+    utilityBoxModel->Position = glm::vec3(27.0f, 1.95f, 27.0f);
+
+    world->modelsToLoad.push(utilityBoxModel);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
